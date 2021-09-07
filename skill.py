@@ -6,6 +6,15 @@ from mycroft.messagebus import Message
 from . import api
 
 
+class ListNotFoundError(ValueError):
+    def __init__(self, name, board_id=None):
+        self.name = name
+        self.board_id = board_id
+
+    def __str__(self):
+        return f"List not found: No list with name {self.name} in board {self.board_id}"
+
+
 class Trello(MycroftSkill):
     def __init__(self):
         super().__init__()
@@ -21,14 +30,17 @@ class Trello(MycroftSkill):
         self.default_board_id = self.settings.get("default_board_id")
 
     def _find_list_by_name(self, name: str, board_id: str = None):
-        board_id = board_id or self.settings.get('default_board_id')
+        board_id = board_id or self.settings.get("default_board_id")
         if not board_id:
             raise AssertionError("Cannot find list without a board")
         r = self.client.get(f"/boards/{board_id}/lists", params={"fields": "name"})
         for l in r.json():
             if l["name"] == name:
                 return l
-        raise ValueError(f"No list with name {name} in board {board_id}")
+        self.log.info(
+            f"Could not find list: {name} among: {[l['name'] for l in r.json()]}"
+        )
+        raise ListNotFoundError(name, board_id)
 
     def _add_card(
         self,
@@ -56,6 +68,7 @@ class Trello(MycroftSkill):
         try:
             list_ = self._find_list_by_name(message.data.get("list"))
         except ValueError:
+            self.log.info()
             return self.speak_dialog("no-such-list")
 
         self._add_card(list_id=list_["id"], name=message.data["item"])
