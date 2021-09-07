@@ -14,10 +14,14 @@ class Trello(MycroftSkill):
         self.client = api.make_client(
             key=self.settings.get("key"), token=self.settings.get("token")
         )
+        self.settings_change_callback = self.on_settings_changed
+        self.on_settings_changed()
+
+    def on_settings_changed(self):
         self.default_board_id = self.settings.get("default_board_id")
 
     def _find_list_by_name(self, name: str, board_id: str = None):
-        board_id = board_id or self.default_board_id
+        board_id = board_id or self.settings.get('default_board_id')
         if not board_id:
             raise AssertionError("Cannot find list without a board")
         r = self.client.get(f"/boards/{board_id}/lists", params={"fields": "name"})
@@ -65,10 +69,11 @@ class Trello(MycroftSkill):
         )
 
     @intent_file_handler("list-boards.intent")
-    def handle_list_boards(self, message: Message):
+    def handle_list_boards(self, _: Message):
         r = self.client.get("/members/me/boards", params={"fields": "name"})
         r.raise_for_status()
         self.log.info(f"Got response: {r.json()}")
-        self.speak("You have boards:")
-        for b in r.json():
-            self.speak(f'{b["name"]} with ID {b["id"]}')
+        boards = r.json()
+        self.speak(f"You have {len(boards)} boards:")
+        for b in boards:
+            self.speak(b["name"])
