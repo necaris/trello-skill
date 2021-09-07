@@ -68,7 +68,7 @@ class Trello(MycroftSkill):
     def handle_list_boards(self, message: Message):
         r = self.client.get("/members/me/boards", params={"fields": "name"})
         r.raise_for_status()
-        self.logger.info(f"Got response: {r.json()}")
+        self.log.info(f"Got response: {r.json()}")
         self.speak("You have boards:")
         for b in r.json():
             self.speak(f'{b["name"]} with ID {b["id"]}')
