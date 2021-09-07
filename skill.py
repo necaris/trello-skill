@@ -68,7 +68,6 @@ class Trello(MycroftSkill):
         try:
             list_ = self._find_list_by_name(message.data.get("list"))
         except ValueError:
-            self.log.info()
             return self.speak_dialog("no-such-list")
 
         self._add_card(list_id=list_["id"], name=message.data["item"])
