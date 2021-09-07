@@ -13,7 +13,11 @@ skillMetadata:
           label: Trello API key
           value: ""
           placeholder: ...paste here...
-    # TODO: default board?
+        - name: default_board_id
+          type: text
+          label: Default board
+          value: ""
+          placeholder: ...paste here...
     # - name: Login << Name of another section
     #   fields:
     #     - type: label
