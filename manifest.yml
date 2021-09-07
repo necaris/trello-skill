@@ -1,0 +1,12 @@
+---
+dependencies:
+  python:
+    - httpx
+  # system:
+  #   all: pianobar piano-dev
+  #   apt-get: pianobar libpiano-dev
+  # exes:
+  #   - pianobar
+  # skill:
+  #   - cocktails
+  #   - webthings-gateway
