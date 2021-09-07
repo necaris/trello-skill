@@ -12,7 +12,7 @@ class Trello(MycroftSkill):
         self.client = api.make_client(
             key=self.settings.get("key"), token=self.settings.get("token")
         )
-        # self.default_board = self.settings.get("default_board")
+        self.default_board_id = self.settings.get("default_board_id")
 
     # find lists
     #   /boards/{id}/lists
@@ -24,9 +24,17 @@ class Trello(MycroftSkill):
     #   idList
     # GET /lists/{id}/cards
 
-    @intent_file_handler("compliment.intent")
-    def handle_compliment(self, message: Message):
-        if message.data.get("name"):
-            self.speak_dialog("compliment.named", message.data)
-        else:
-            self.speak_dialog("compliment")
+    @intent_file_handler("new-card.intent")
+    def handle_add_card(self, message: Message):
+        # if "board" not in message.data and not self.default_board_id:
+        #     self.speak_dialog('insufficient.dialog')
+        # TODO find the list
+        self.client.post(
+            "/cards",
+            params={
+                "idList": "59bf0557f88fc9a1d9b4f58b",
+                "name": message.data.get("item"),
+            },
+        )
+        # TODO check return status
+        self.speak_dialog("added-card", message.data)
