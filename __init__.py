@@ -1,8 +1,4 @@
-# https://github.com/MycroftAI/mycroft-timer
-from .skill import Compliment
+from .skill import Trello
 
 
-create_skill = Compliment
-
-# def create_skill():
-#     return Compliment()
+create_skill = Trello
