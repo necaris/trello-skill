@@ -4,12 +4,12 @@ skillMetadata:
     - name: Authenticating
       fields:
         - name: token
-          type: text
+          type: password
           label: Trello API token
           value: ""
           placeholder: ...paste here...
         - name: key
-          type: text
+          type: password
           label: Trello API key
           value: ""
           placeholder: ...paste here...
