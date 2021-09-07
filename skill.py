@@ -35,7 +35,8 @@ class Trello(MycroftSkill):
             raise AssertionError("Cannot find list without a board")
         r = self.client.get(f"/boards/{board_id}/lists", params={"fields": "name"})
         for l in r.json():
-            if l["name"] == name:
+            # TODO: fuzzier matching
+            if l["name"].lower() == name:
                 return l
         self.log.info(
             f"Could not find list: {name} among: {[l['name'] for l in r.json()]}"
