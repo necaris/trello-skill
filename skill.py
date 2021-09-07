@@ -29,12 +29,17 @@ class Trello(MycroftSkill):
         # if "board" not in message.data and not self.default_board_id:
         #     self.speak_dialog('insufficient.dialog')
         # TODO find the list
-        self.client.post(
+        self.log.info(f"Trying to add {message.data}")
+        r = self.client.post(
             "/cards",
             params={
                 "idList": "59bf0557f88fc9a1d9b4f58b",
                 "name": message.data.get("item"),
             },
         )
+        self.log.info(f"Got a response: {r.status_code}, {r.json()}")
         # TODO check return status
-        self.speak_dialog("added-card", message.data)
+        self.speak_dialog(
+            "added-card",
+            {"item": "item", "list": "your list", "board": "default of boards"},
+        )
