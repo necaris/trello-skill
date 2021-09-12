@@ -2,6 +2,7 @@ import typing
 
 from mycroft import MycroftSkill, intent_file_handler
 from mycroft.messagebus import Message
+from fuzzywuzzy import fuzz
 
 from . import api
 
@@ -35,8 +36,7 @@ class Trello(MycroftSkill):
             raise AssertionError("Cannot find list without a board")
         r = self.client.get(f"/boards/{board_id}/lists", params={"fields": "name"})
         for l in r.json():
-            # TODO: fuzzier matching
-            if l["name"].lower() == name:
+            if fuzz.ratio(name, l["name"].lower()) > 99:
                 return l
         self.log.info(
             f"Could not find list: {name} among: {[l['name'] for l in r.json()]}"
