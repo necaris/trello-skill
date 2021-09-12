@@ -90,3 +90,20 @@ class Trello(MycroftSkill):
         self.speak(f"You have {len(boards)} boards:")
         for b in boards:
             self.speak(b["name"])
+
+    @intent_file_handler("clear-list.intent")
+    def handle_clear_list(self, message: Message):
+        # archive all items in named list
+        pass
+
+    # GET /lists/{id}/cards
+
+    @intent_file_handler("query-list.intent")
+    def handle_query_list(self, message: Message):
+        # is X on the shopping list?
+        pass
+
+    @intent_file_handler("remove-card.intent")
+    def handle_remove_from_list(self, message: Message):
+        # is X on the shopping list?
+        pass

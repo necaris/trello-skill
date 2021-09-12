@@ -17,4 +17,4 @@ Rami Chowdhury
 ## Tags
 
 ## Roadmap / TODO
-- Archive all cards in a list (e.g. just come back from shopping trip)
+- Configure defaults, etc from voice UI
