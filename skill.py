@@ -60,23 +60,24 @@ class Trello(MycroftSkill):
         r.raise_for_status()
         return r.json()
 
-    # GET /lists/{id}/cards
-
     @intent_file_handler("new-card.intent")
     def handle_add_card(self, message: Message):
-        # if "board" not in message.data and not self.default_board_id:
-        #     self.speak_dialog('insufficient.dialog')
+        # TODO: add if _not present_ only
+        if "board" not in message.data and not self.default_board_id:
+            return self.speak_dialog("insufficient-info.dialog")
         try:
-            list_ = self._find_list_by_name(message.data.get("list"))
+            l = self._find_list_by_name(message.data.get("list"))
         except ValueError:
-            return self.speak_dialog("no-such-list")
+            return self.speak_dialog(
+                "no-such-list", {"list": message.data.get("list"), "board": "default"}
+            )
 
-        self._add_card(list_id=list_["id"], name=message.data["item"])
+        self._add_card(list_id=l["id"], name=message.data["item"])
         self.speak_dialog(
             "added-card",
             {
                 "item": message.data["item"],
-                "list": list_["name"],
+                "list": l["name"],
                 "board": "default board",
             },
         )
